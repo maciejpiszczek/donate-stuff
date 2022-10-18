@@ -1,2 +1,3 @@
-## Donate Stuff App
+# Donate Stuff
 
+## How to run?
