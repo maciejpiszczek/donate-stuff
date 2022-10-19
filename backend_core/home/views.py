@@ -1,5 +1,5 @@
 from django.views.generic import TemplateView
 
 
-class HomeView(TemplateView):
+class LandingPageView(TemplateView):
     template_name = 'index.html'
