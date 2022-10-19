@@ -1,16 +1,11 @@
-<!DOCTYPE html>
-<html lang="pl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
+{% extends 'base.html' %}
+{% load static %}
 
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-    <link rel="stylesheet" href="{% static 'scss/style.scss' %}" />
-  </head>
-  <body>
+{% block title %}
+  Welcome
+{% endblock title %}
+
+  {% block header %}
     <header class="header--main-page">
       {% include 'partials/navbar.html' %}
 
@@ -23,7 +18,9 @@
         </div>
       </div>
     </header>
+  {% endblock header %}
 
+  {% block container %}
     <section id="stats" class="stats">
       <div class="container container--85">
         <div class="stats--item">
@@ -216,7 +213,9 @@
         -->
       </div>
     </section>
+  {% endblock container %}
 
+  {% block footer %}
     <footer>
       <div id="contact" class="contact">
         <h2>Skontaktuj się z nami</h2>
@@ -238,7 +237,4 @@
         </div>
       </div>
     </footer>
-
-    <script src="{% static 'js/app.js'}"></script>
-  </body>
-</html>
+  {% endblock footer %}
