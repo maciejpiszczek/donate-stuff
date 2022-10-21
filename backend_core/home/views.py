@@ -1,5 +1,3 @@
-from functools import reduce
-
 from django.views.generic import TemplateView
 
 from home.models import Donation, Institution

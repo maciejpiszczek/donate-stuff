@@ -57,13 +57,13 @@ class RegistrationForm(forms.ModelForm):
 
 
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(widget=forms.TextInput(attrs={
+    username = forms.EmailField(label='Email', widget=forms.TextInput(attrs={
         'name': 'username',
-        'placeholder': 'Username',
+        'placeholder': 'Email',
     }))
 
     password = forms.CharField(widget=forms.PasswordInput(attrs={
-        'placeholder': 'Password',
+        'placeholder': 'Hasło',
     }))
 
     class Meta:
