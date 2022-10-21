@@ -87,7 +87,8 @@
 
       {% for group in institutions %}
       <div class="help--slides {% if group.0 == 1 %}active{% endif %}" data-id="{{ group.0 }}">
-        <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy. Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
+        <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy.
+          Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
 
         <ul class="help--slides-items">
           {% for institution in group.1 %}
@@ -97,11 +98,13 @@
               <div class="subtitle">{{ institution.description }}</div>
             </div>
 
+            <div class="col">
               <div class="text">
                 {% for category in institution.categories.all %}
-                  {{ category }}
+                  {{ category }},
                 {% endfor %}
               </div>
+            </div>
 
           </li>
           {% endfor %}
