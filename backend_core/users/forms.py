@@ -6,24 +6,27 @@ from django.core.validators import EmailValidator
 
 
 class RegistrationForm(forms.ModelForm):
-    username = forms.CharField(widget=forms.TextInput(attrs={
-        'placeholder': 'Enter username',
+    first_name = forms.CharField(widget=forms.TextInput(attrs={
+        'placeholder': 'Imię',
+    }))
+    last_name = forms.CharField(widget=forms.TextInput(attrs={
+        'placeholder': 'Nazwisko',
     }))
     password = forms.CharField(widget=forms.PasswordInput(attrs={
         'minlength': 5,
-        'placeholder': 'Enter password'
+        'placeholder': 'Hasło'
     }))
     password_confirmation = forms.CharField(label='Password confirmation', widget=forms.PasswordInput(attrs={
-        'placeholder': 'Confirm password'
+        'placeholder': 'Powtórz hasło'
     }))
     email = forms.CharField(widget=forms.TextInput(attrs={
-        'placeholder': 'Enter your email',
+        'placeholder': 'Email',
         'validators': EmailValidator,
     }))
 
     class Meta:
         model = get_user_model()
-        fields = ('username', 'email', 'password')
+        fields = ('first_name', 'last_name', 'email', 'password')
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
