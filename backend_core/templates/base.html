@@ -8,9 +8,10 @@
 
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/scroll.css' %}" />
     <script src="{% static 'js/app.js' %}" async defer></script>
   </head>
-  <body>
+  <body class="h-100">
     {% block header %}{% endblock header %}
     {% block container %}{% endblock container %}
     {% block footer %}{% endblock footer %}

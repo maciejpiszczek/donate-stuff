@@ -12,36 +12,68 @@
 {% endblock header %}
 
 {% block container %}
-    <section id="help" class="help">
+    <section id="help" class="help" style="margin-bottom: 0; padding-bottom: 0;">
       <h2>{{ user.first_name }} {{ user.last_name }}</h2>
       <h1>Kontakt: {{ user.email }}</h1>
 
-      {% for donation in donations %}
-          <div class="help">
-            <h1>{{ donation }}</h1>
+      <h1>Twoje darowizny:</h1>
+      <div class="scroll-container">
+        {% for donation in donations %}
+          <button type="button" class="collapsible">{{ donation }}</button>
+          <div class="content" style="justify-content: space-between">
+                <div class="w-50" style="text-align: left;">
+                    <p><strong>Data i godzina odbioru:</strong></p>
+                    <p><strong>Dla:</strong></p>
+                    <p><strong>Typ instytucji:</strong></p>
+                    <p><strong>Kategorie darowanych przedmiotów:</strong></p>
+                    <p><strong>Ilość worków:</strong></p>
+                    <p><strong>Telefon kontaktowy:</strong></p>
+                    <p><strong>Adres:</strong></p>
+                    <p><strong>Kod pocztowy:</strong></p>
+                    <p><strong>Miasto:</strong></p>
+                    {% if donation.pick_up_comment %}
+                        <p><strong>Dodatkowe uwagi:</strong></p>
+                    {% endif %}
+                </div>
+                <div class="w-50" style="text-align: right;">
+                    <p>{{ donation.pick_up_date }} {{ donation.pick_up_time }}</p>
+                    <p>{{ donation.institution.name }}</p>
+                    <p>{{ donation.institution.get_type_display }}</p>
+                    <p>
+                        {% for category in donation.categories.all %}
+                            {{ category.name }}
+                        {% endfor %}
+                    </p>
+                    <p>{{ donation.quantity }}</p>
+                    <p>{{ donation.phone_number }}</p>
+                    <p>{{ donation.address }}</p>
+                    <p>{{ donation.zip_code }}</p>
+                    <p>{{ donation.city }}</p>
+                    {% if donation.pick_up_comment %}
+                        <p>{{ donation.pick_up_comment }}</p>
+                    {% endif %}
+                </div>
           </div>
-      {% empty %}
-          <div class="help">
-              <h1>You did not donate anything yet.</h1>
-          </div>
-      {% endfor %}
-    </section>
-{% endblock container %}
-
-{% block footer %}
-    <section id="stats" class="stats">
-      <div class="container container--85">
-        <div class="stats--item">
-          <em>{{ bags_count }}</em>
-          <h3>Oddanych worków</h3>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius est beatae, quod accusamus illum tempora!</p>
-        </div>
-
-        <div class="stats--item">
-          <em>{{ inst_count }}</em>
-          <h3>Wspartych organizacji</h3>
-          <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam magnam, sint nihil cupiditate quas quam.</p>
-        </div>
+        {% endfor %}
       </div>
     </section>
-{% endblock footer %}
+
+    <section id="stats" class="stats" style="margin-bottom: 0; ">
+          <div class="stats--item">
+              <h2>Twoje statystyki</h2>
+          </div>
+          <div class="container container--85">
+              <div class="stats--item">
+                  <em>{{ bags_count }}</em>
+                  <h3>Oddanych worków</h3>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius est beatae, quod accusamus illum tempora!</p>
+              </div>
+
+              <div class="stats--item">
+                  <em>{{ inst_count }}</em>
+                  <h3>Wspartych organizacji</h3>
+                  <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam magnam, sint nihil cupiditate quas quam.</p>
+              </div>
+          </div>
+        </section>
+{% endblock container %}
