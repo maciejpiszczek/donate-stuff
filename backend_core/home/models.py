@@ -22,7 +22,7 @@ class Institution(models.Model):
     categories = models.ManyToManyField('Category', related_name='institutions')
 
     def __str__(self):
-        return self.name
+        return f'{self.name} ({self.get_type_display()}) - {", ".join([category.name for category in self.categories.all()])}'
 
 
 class Donation(models.Model):
