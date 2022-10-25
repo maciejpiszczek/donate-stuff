@@ -269,3 +269,18 @@ for (i = 0; i < coll.length; i++) {
     }
   });
 }
+
+  const archiveBtns = document.querySelectorAll(".archive");
+
+  for (let i = 0; i < archiveBtns.length; i++) {
+  archiveBtns[i].addEventListener("click", function() {
+    this.style.display = 'none';
+    let donButton = this.parentElement.parentElement.previousElementSibling;
+    let donDetails = this.parentElement.parentElement;
+    donButton.textContent += ' (DOSTARCZONE)';
+    donButton.classList.toggle("chosen");
+    donButton.remove();
+    document.querySelector(".scroll-container").append(donButton);
+    document.querySelector(".scroll-container").append(donDetails);
+    donDetails.style.display = "none";
+  })}

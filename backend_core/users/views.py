@@ -1,9 +1,8 @@
-from functools import reduce
-
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, TemplateView
 from django.contrib.auth import authenticate, login, get_user_model
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 
 from home import models
@@ -37,9 +36,12 @@ class LogInView(LoginView):
         return redirect(reverse_lazy('users:registration'))
 
 
-class UserProfileView(DetailView):
+class UserProfileView(LoginRequiredMixin, TemplateView):
     model = get_user_model()
     template_name = 'user-page.html'
+
+    def get_object(self, queryset=None):
+        return self.request.user
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
