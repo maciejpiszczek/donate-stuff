@@ -1,3 +1,5 @@
+import datetime
+
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView
 from django.contrib.auth import authenticate, login, get_user_model
@@ -46,6 +48,7 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['donations'] = models.Donation.objects.filter(user_id=self.request.user.id)
+        context['today'] = datetime.date.today()
         context['bags_count'] = sum([don.quantity for don in context['donations']])
         context['inst_count'] = len(set([don.institution for don in context['donations']]))
 

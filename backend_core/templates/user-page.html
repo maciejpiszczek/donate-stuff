@@ -19,8 +19,14 @@
       <h1>Twoje darowizny:</h1>
       <div class="scroll-container">
         {% for donation in donations %}
-            <button type="button" class="collapsible"><strong>{{ donation }}</strong></button>
-          <div class="content" style="justify-content: space-between;">
+            <button type="button" class="collapsible" id="{{ donation.id }}">
+                {% if donation.is_taken %}
+                    {{ donation }} (DOSTARCZONE)
+                {% else %}
+                    <strong>{{ donation }}</strong>
+                {% endif %}
+            </button>
+                <div class="content" style="justify-content: space-between;">
                 <div class="w-50" style="text-align: left;">
                     <p><strong>Data i godzina odbioru:</strong></p>
                     <p><strong>Dla:</strong></p>
@@ -52,7 +58,12 @@
                     {% if donation.pick_up_comment %}
                         <p>{{ donation.pick_up_comment }}</p>
                     {% endif %}
-                    <button type="submit" class="archive d-none">Dostarczone!</button>
+                    {% if not donation.is_taken %}
+                        {% if today < donation.pick_up_date %}
+                        {% else %}
+                            <button type="button" class="archive d-none">Dostarczone!</button>
+                        {% endif %}
+                    {% endif %}
                 </div>
           </div>
         {% endfor %}

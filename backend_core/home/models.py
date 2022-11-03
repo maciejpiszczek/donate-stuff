@@ -41,3 +41,6 @@ class Donation(models.Model):
 
     def __str__(self):
         return f'{self.pick_up_date} {self.pick_up_time} - {self.city} - {self.institution.name}'
+
+    class Meta:
+        ordering = ['is_taken', 'pick_up_date']
