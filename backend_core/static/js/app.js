@@ -1,7 +1,6 @@
-document.addEventListener("DOMContentLoaded", function() {
-  /**
+/**
    * HomePage - Help section
-   */
+ * */
   class Help {
     constructor($el) {
       this.$el = $el;
@@ -196,8 +195,11 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$next.forEach(btn => {
         btn.addEventListener("click", e => {
           e.preventDefault();
-          this.currentStep++;
+          this.validateForm();
           this.updateForm();
+          if (this.currentStep === 4) {
+            this.formSummary();
+          }
         });
       });
 
@@ -218,10 +220,56 @@ document.addEventListener("DOMContentLoaded", function() {
      * Update form front-end
      * Show next or previous section etc.
      */
+
+    validateForm() {
+      let isValid = true;
+
+      const categories = [...document.querySelectorAll(".category-choice")];
+      const choosenCats = categories.filter(cat => cat.checked);
+
+      const quantityField = document.querySelector("#quantity");
+      const addressField = document.querySelector("#address");
+      const cityField = document.querySelector("#city");
+      const zipCodeField = document.querySelector("#zip_code");
+      const phoneNumberField = document.querySelector("#phone_number");
+      const pickUpDateField = document.querySelector("#pickupdate");
+      const pickUpTimeField = document.querySelector("#pickuptime");
+
+      const categoriesValidator = !(choosenCats.length === 0);
+      const quantityValidator = !((this.currentStep > 1 && !quantityField.value) || (this.currentStep > 1 && quantityField.value < 1));
+      const detailsValidator = !(this.currentStep > 3
+          && (!addressField.value || !cityField.value || !zipCodeField.value || !phoneNumberField.value
+              || !pickUpDateField.value || !pickUpTimeField.value));
+
+      isValid &&= categoriesValidator;
+      isValid &&= quantityValidator;
+
+      if (this.currentStep === 3) {
+        const institutions = [...document.querySelectorAll(".institution-choice")];
+        const instFiltered = institutions.filter(inst => inst.checked);
+        const choosenInstValidator = !(instFiltered.length === 0);
+        isValid &&= choosenInstValidator;
+      }
+
+      isValid &&= detailsValidator;
+
+      const formErrors = [...document.querySelectorAll(".form-error")];
+      const currStepError = formErrors.filter(err => err.parentElement.classList.contains("active"))[0];
+
+      if (isValid === true) {
+        this.currentStep++;
+        if (this.currentStep < 5) {
+          currStepError.setAttribute("hidden", "hidden");
+        }
+      } else {
+        currStepError.removeAttribute("hidden");
+      }
+
+      return isValid;
+    }
+
     updateForm() {
       this.$step.innerText = this.currentStep;
-
-      // TODO: Validation
 
       this.slides.forEach(slide => {
         slide.classList.remove("active");
@@ -233,27 +281,102 @@ document.addEventListener("DOMContentLoaded", function() {
 
       this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
       this.$step.parentElement.hidden = this.currentStep >= 6;
+    }
 
-      // TODO: get data from inputs and show them in summary
+    formSummary() {
+      const summaryBtn = document.querySelector(".get-form-data");
+      summaryBtn.addEventListener("click", function() {
+        const quantity = document.getElementById("quantity").value;
+        const institutions = [...document.querySelectorAll(".institution-choice")];
+        const choosenInst = institutions.filter(inst => inst.checked)[0].nextElementSibling.nextElementSibling.firstElementChild.firstElementChild.innerHTML;
+        const categories = [...document.querySelectorAll(".category-choice")];
+        const choosenCats = categories.filter(cat => cat.checked);
+        let choosenCatsNames = "";
+
+        choosenCats.forEach(cat => {
+          const catName = cat.nextElementSibling.nextElementSibling.firstElementChild.innerHTML;
+          if (choosenCatsNames === "") {
+            choosenCatsNames += catName;
+          } else {
+            choosenCatsNames += (", " + catName);
+          }
+        })
+
+        const address = document.querySelector("#address").value;
+        const city = document.querySelector("#city").value;
+        const zipCode = document.querySelector("#zip_code").value;
+        const phoneNumber = document.querySelector("#phone_number").value;
+        const pickUpDate = document.querySelector("#pickupdate").value;
+        const pickUpTime = document.querySelector("#pickuptime").value;
+        const pickUpComment = document.querySelector("#comment").value;
+
+        document.querySelector("#donation_info").innerHTML = quantity + " worków " + choosenCatsNames;
+        document.querySelector("#don_institution").innerHTML = "Dla " + choosenInst;
+        document.querySelector("#don_address").innerHTML = address;
+        document.querySelector("#don_city").innerHTML = city;
+        document.querySelector("#don_zip_code").innerHTML = zipCode;
+        document.querySelector("#don_phone").innerHTML = phoneNumber;
+        document.querySelector("#don_date").innerHTML = pickUpDate;
+        document.querySelector("#don_time").innerHTML = pickUpTime;
+        document.querySelector("#don_comment").innerHTML = pickUpComment;
+      })
     }
 
     /**
      * Submit form
      *
-     * TODO: validation, send data to server
      */
     submit(e) {
       e.preventDefault();
-      this.currentStep++;
       this.updateForm();
+      this.validateForm();
+      let data = new FormData();
+
+      const categories = [...document.getElementsByName("categories")];
+      const choosenCats = categories.filter(cat => cat.checked);
+      let catValues = [];
+      for (let el in choosenCats) {
+        catValues.push(el.attributes.value);
+      }
+      console.log(catValues);
+
+      const quantity = document.getElementsByName("quantity")[0];
+      const address = document.getElementsByName("address")[0];
+      const city = document.getElementsByName("city")[0];
+      const zipCode = document.getElementsByName("zip_code")[0];
+      const phoneNumber = document.getElementsByName("phone_number")[0];
+      const pickUpDate = document.getElementsByName("pick_up_date")[0];
+      const pickUpTime = document.getElementsByName("pick_up_time")[0];
+      const pickUpComment = document.getElementsByName("pick_up_comment")[0];
+
+      data.append("categories", catValues);
+      data.append(quantity.name, quantity.value);
+      data.append(address.name, address.value);
+      data.append(city.name, city.value);
+      data.append(zipCode.name, zipCode.value);
+      data.append(phoneNumber.name, phoneNumber.value);
+      data.append(pickUpDate.name, pickUpDate.value);
+      data.append(pickUpTime.name, pickUpTime.value);
+      data.append(pickUpComment.name, pickUpComment.value);
+
+      fetch("/add_donation", {
+        method: "POST",
+        body: data
+      }).then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+
+
     }
   }
   const form = document.querySelector(".form--steps");
   if (form !== null) {
     new FormSteps(form);
   }
-
-});
 
 let coll = document.querySelectorAll(".collapsible");
 let i;

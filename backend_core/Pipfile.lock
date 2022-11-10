@@ -107,6 +107,14 @@
             "index": "pypi",
             "version": "==0.9.0"
         },
+        "django-formtools": {
+            "hashes": [
+                "sha256:deb932be55b1d9419e37dc4d65dfbfeb8d307b71c8c11fd52f159aba5fc0deed",
+                "sha256:f5f32f62ec8192cd1bc55bd929ca7dff5a5f2addf9027db95a5906ecfaa64836"
+            ],
+            "index": "pypi",
+            "version": "==2.4"
+        },
         "django-phonenumber-field": {
             "hashes": [
                 "sha256:dab78094e83f4b1276effca9903e6728e940d055b00cc8589ad5b8a22cb6a03b",

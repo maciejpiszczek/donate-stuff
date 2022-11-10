@@ -1,9 +1,7 @@
-from functools import reduce
-
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView
 from django.contrib.auth import authenticate, login, get_user_model
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 
 from home import models

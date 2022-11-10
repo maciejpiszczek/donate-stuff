@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'formtools',
+
     'users.apps.UsersConfig',
     'home.apps.HomeConfig',
 ]

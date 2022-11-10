@@ -16,4 +16,5 @@ pytest-django==4.5.2
 sqlparse==0.4.2
 tomli==2.0.1
 django-phonenumber-field = "*"
-django-phonenumbers = "==1.0.1"
+django-phonenumbers==1.0.1
+django-formtools==2.4
