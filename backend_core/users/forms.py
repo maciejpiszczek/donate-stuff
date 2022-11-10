@@ -48,6 +48,7 @@ class RegistrationForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
+        user.username = self.cleaned_data.get('email')
         user.set_password(self.cleaned_data.get('password'))
 
         if commit:

@@ -392,3 +392,34 @@ for (i = 0; i < coll.length; i++) {
     }
   });
 }
+
+const archiveBtns = document.querySelectorAll(".archive");
+
+archiveBtns.forEach(btn =>
+    btn.onclick = function() {
+      this.style.display = 'none';
+      let donButton = this.parentElement.parentElement.previousElementSibling;
+      let donDetails = this.parentElement.parentElement;
+      donButton.textContent += ' (DOSTARCZONE)';
+      donButton.classList.toggle("chosen");
+      donButton.remove();
+      document.querySelector(".scroll-container").append(donButton);
+      document.querySelector(".scroll-container").append(donDetails);
+      donDetails.style.display = "none";
+      const donationId = this.value;
+      let donationIdInt = parseInt(donationId, 10)
+
+      const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+
+      $.ajax({
+        type: "POST",
+        url: window.location.href,
+        headers: {
+          "X-requested-With": "XMLHttpRequest",
+          "X-CSRFToken": csrfToken,
+        },
+        data: {
+          "donation_id": donationIdInt
+        }})
+
+      });
