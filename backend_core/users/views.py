@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, get_user_model
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
+from django.http import JsonResponse
 
 from home import models
 from .forms import RegistrationForm, LoginForm
@@ -38,6 +39,10 @@ class LogInView(LoginView):
         return redirect(reverse_lazy('users:registration'))
 
 
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+
 class UserProfileView(LoginRequiredMixin, TemplateView):
     model = get_user_model()
     template_name = 'user-page.html'
@@ -53,3 +58,9 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
         context['inst_count'] = len(set([don.institution for don in context['donations']]))
 
         return context
+
+    def post(self, request):
+        if is_ajax(request):
+            data = {"is_taken": True}
+            print(request.POST.get('value'))
+            return JsonResponse(data)

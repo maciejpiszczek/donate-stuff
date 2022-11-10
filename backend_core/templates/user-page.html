@@ -61,7 +61,8 @@
                     {% if not donation.is_taken %}
                         {% if today < donation.pick_up_date %}
                         {% else %}
-                            <button type="button" class="archive d-none">Dostarczone!</button>
+                            {% csrf_token %}
+                            <button type="button" class="archive d-none" value="{{ donation.id }}">Dostarczone!</button>
                         {% endif %}
                     {% endif %}
                 </div>
