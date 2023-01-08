@@ -58,8 +58,7 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
 
         return context
 
-    def post(self, request):
-        if is_ajax(request):
-            data = {"is_taken": True}
-            print(request.POST.get('value'))
+    def post(self):
+        if is_ajax(self.request):
+            data = self.request.POST.get('donation_id')
             return JsonResponse(data)

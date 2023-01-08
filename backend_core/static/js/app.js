@@ -224,9 +224,7 @@
     validateForm() {
       let isValid = true;
 
-      const categories = [...document.querySelectorAll(".category-choice")];
-      const choosenCats = categories.filter(cat => cat.checked);
-
+      const choosenCats = [...document.querySelectorAll("input[type='checkbox']:checked")];
       const quantityField = document.querySelector("#quantity");
       const addressField = document.querySelector("#address");
       const cityField = document.querySelector("#city");
@@ -245,9 +243,17 @@
       isValid &&= quantityValidator;
 
       if (this.currentStep === 3) {
-        const institutions = [...document.querySelectorAll(".institution-choice")];
-        const instFiltered = institutions.filter(inst => inst.checked);
-        const choosenInstValidator = !(instFiltered.length === 0);
+        // const institutions = [...document.querySelectorAll(".institution-choice")];
+        // const instFiltered = institutions.filter(inst => inst.checked);
+        // const choosenInstValidator = !(instFiltered.length === 0);
+
+        const institution = document.querySelector('input[name="institution"]:checked');
+        let choosenInstValidator = false;
+
+        if (institution !== null) {
+           choosenInstValidator = true;
+        }
+
         isValid &&= choosenInstValidator;
       }
 
@@ -279,26 +285,24 @@
         }
       });
 
-      this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
-      this.$step.parentElement.hidden = this.currentStep >= 6;
+      this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 5;
+      this.$step.parentElement.hidden = this.currentStep >= 5;
     }
 
     formSummary() {
       const summaryBtn = document.querySelector(".get-form-data");
       summaryBtn.addEventListener("click", function() {
         const quantity = document.getElementById("quantity").value;
-        const institutions = [...document.querySelectorAll(".institution-choice")];
-        const choosenInst = institutions.filter(inst => inst.checked)[0].nextElementSibling.nextElementSibling.firstElementChild.firstElementChild.innerHTML;
-        const categories = [...document.querySelectorAll(".category-choice")];
-        const choosenCats = categories.filter(cat => cat.checked);
-        let choosenCatsNames = "";
+        const institution = document.querySelector('input[name="institution"]:checked').parentElement.textContent;
+        const chosenCats = document.querySelectorAll('input[name="categories"]:checked');
+        let chosenCatsNames = "";
 
-        choosenCats.forEach(cat => {
-          const catName = cat.nextElementSibling.nextElementSibling.firstElementChild.innerHTML;
-          if (choosenCatsNames === "") {
-            choosenCatsNames += catName;
+        chosenCats.forEach(cat => {
+          const catName = cat.parentElement.textContent;
+          if (chosenCatsNames === "") {
+            chosenCatsNames += catName;
           } else {
-            choosenCatsNames += (", " + catName);
+            chosenCatsNames += (", " + catName);
           }
         })
 
@@ -310,8 +314,8 @@
         const pickUpTime = document.querySelector("#pickuptime").value;
         const pickUpComment = document.querySelector("#comment").value;
 
-        document.querySelector("#donation_info").innerHTML = quantity + " worków " + choosenCatsNames;
-        document.querySelector("#don_institution").innerHTML = "Dla " + choosenInst;
+        document.querySelector("#donation_info").innerHTML = quantity + " worków " + chosenCatsNames;
+        document.querySelector("#don_institution").innerHTML = "Dla " + institution;
         document.querySelector("#don_address").innerHTML = address;
         document.querySelector("#don_city").innerHTML = city;
         document.querySelector("#don_zip_code").innerHTML = zipCode;
@@ -330,95 +334,58 @@
       e.preventDefault();
       this.updateForm();
       this.validateForm();
-      let data = new FormData();
 
-      const categories = [...document.getElementsByName("categories")];
-      const choosenCats = categories.filter(cat => cat.checked);
-      let catValues = [];
-      for (let el in choosenCats) {
-        catValues.push(el.attributes.value);
+      const form = document.querySelector("#donation-form");
+      let formData = new FormData(form);
+      const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+
+      function sendJson(inData) {
+        const quantity = document.getElementById("quantity").value;
+        const institution = document.querySelector('input[name="institution"]:checked').value;
+        const chosenCats = document.querySelectorAll('input[name="categories"]:checked');
+        let chosenCatsIds = [];
+
+        chosenCats.forEach(cat => {
+          const catId = cat.value;
+          chosenCatsIds.push(catId);
+        })
+
+        const address = document.querySelector("#address").value;
+        const city = document.querySelector("#city").value;
+        const zipCode = document.querySelector("#zip_code").value;
+        const phoneNumber = document.querySelector("#phone_number").value;
+        const pickUpDate = document.querySelector("#pickupdate").value;
+        const pickUpTime = document.querySelector("#pickuptime").value;
+        const pickUpComment = document.querySelector("#comment").value;
+
+        let xhr = new XMLHttpRequest();
+        let url = "";
+
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("X-CSRFToken", csrfToken);
+
+        let data = JSON.stringify({
+          "categories": chosenCatsIds,
+          "quantity": quantity,
+          "institution": institution,
+          "address": address,
+          "city": city,
+          "zip_code": zipCode,
+          "phone_number": phoneNumber,
+          "pick_up_date": pickUpDate,
+          "pick_up_time": pickUpTime,
+          "pick_up_comment": pickUpComment
+        })
+        console.log(data);
+        xhr.send(data);
       }
-      console.log(catValues);
 
-      const quantity = document.getElementsByName("quantity")[0];
-      const address = document.getElementsByName("address")[0];
-      const city = document.getElementsByName("city")[0];
-      const zipCode = document.getElementsByName("zip_code")[0];
-      const phoneNumber = document.getElementsByName("phone_number")[0];
-      const pickUpDate = document.getElementsByName("pick_up_date")[0];
-      const pickUpTime = document.getElementsByName("pick_up_time")[0];
-      const pickUpComment = document.getElementsByName("pick_up_comment")[0];
-
-      data.append("categories", catValues);
-      data.append(quantity.name, quantity.value);
-      data.append(address.name, address.value);
-      data.append(city.name, city.value);
-      data.append(zipCode.name, zipCode.value);
-      data.append(phoneNumber.name, phoneNumber.value);
-      data.append(pickUpDate.name, pickUpDate.value);
-      data.append(pickUpTime.name, pickUpTime.value);
-      data.append(pickUpComment.name, pickUpComment.value);
-
-      fetch("/add_donation", {
-        method: "POST",
-        body: data
-      }).then(response => response.json())
-      .then(data => {
-        console.log('Success:', data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-
-
+      sendJson(formData);
     }
+
   }
   const form = document.querySelector(".form--steps");
   if (form !== null) {
     new FormSteps(form);
   }
-
-let coll = document.querySelectorAll(".collapsible");
-
-for (let i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function() {
-    this.classList.toggle("chosen");
-    let content = this.nextElementSibling;
-    if (content.style.display === "flex") {
-      content.style.display = "none";
-    } else {
-      content.style.display = "flex";
-    }
-  });
-}
-
-const archiveBtns = document.querySelectorAll(".archive");
-
-archiveBtns.forEach(btn =>
-    btn.onclick = function() {
-      this.style.display = 'none';
-      let donButton = this.parentElement.parentElement.previousElementSibling;
-      let donDetails = this.parentElement.parentElement;
-      donButton.textContent += ' (DOSTARCZONE)';
-      donButton.classList.toggle("chosen");
-      donButton.remove();
-      document.querySelector(".scroll-container").append(donButton);
-      document.querySelector(".scroll-container").append(donDetails);
-      donDetails.style.display = "none";
-      const donationId = this.value;
-      let donationIdInt = parseInt(donationId, 10)
-
-      const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-
-      $.ajax({
-        type: "POST",
-        url: window.location.href,
-        headers: {
-          "X-requested-With": "XMLHttpRequest",
-          "X-CSRFToken": csrfToken,
-        },
-        data: {
-          "donation_id": donationIdInt
-        }})
-
-      });

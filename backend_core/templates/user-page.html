@@ -5,6 +5,11 @@
     {{ user.first_name }} {{ user.last_name }}
 {% endblock title %}
 
+{% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js" async defer></script>
+    <script src="{% static 'js/archive.js' %}" async defer></script>
+{% endblock %}
+
 {% block header %}
     <header class="">
         {% include 'partials/navbar.html' %}

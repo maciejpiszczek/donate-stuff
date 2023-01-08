@@ -3,7 +3,10 @@ from . import models
 
 
 class AddDonationForm(forms.ModelForm):
-    institution = forms.ModelChoiceField(queryset=models.Institution.objects.all())
+    categories = forms.ModelMultipleChoiceField(queryset=models.Category.objects.all(),
+                                                widget=forms.CheckboxSelectMultiple)
+    institution = forms.ModelChoiceField(queryset=models.Institution.objects.all(),
+                                         widget=forms.RadioSelect)
 
     class Meta:
         model = models.Donation

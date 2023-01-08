@@ -32,7 +32,6 @@ DEBUG = int(os.environ.get('DJ_DEBUG', False))
 
 ALLOWED_HOSTS = os.environ.get('DJ_ALLOWED_HOSTS', '').split()
 
-
 # Application definition
 
 INSTALLED_APPS = [
