@@ -337,12 +337,12 @@
 
       function sendJson(inData) {
         const quantity = document.getElementById("quantity").value;
-        const institution = document.querySelector('input[name="institution"]:checked').value;
+        const institution = document.querySelector('input[name="institution"]:checked').nextElementSibling.nextElementSibling.firstElementChild.firstElementChild.firstElementChild.value;
         const chosenCats = document.querySelectorAll('input[name="categories"]:checked');
         let chosenCatsIds = [];
 
         chosenCats.forEach(cat => {
-          const catId = cat.value;
+          const catId = cat.nextElementSibling.nextElementSibling.firstElementChild.firstElementChild.value;
           chosenCatsIds.push(catId);
         })
 
