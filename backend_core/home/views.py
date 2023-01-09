@@ -52,7 +52,7 @@ class DonationCreateView(LoginRequiredMixin, CreateView):
             )
             for cat in form_data['categories']:
                 donation.categories.add(Category.objects.get(id=int(cat)))
-            donation.save()
+            # donation.save()
             return HttpResponse(status=200)
 
         except DatabaseError:

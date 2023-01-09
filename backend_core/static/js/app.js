@@ -243,10 +243,6 @@
       isValid &&= quantityValidator;
 
       if (this.currentStep === 3) {
-        // const institutions = [...document.querySelectorAll(".institution-choice")];
-        // const instFiltered = institutions.filter(inst => inst.checked);
-        // const choosenInstValidator = !(instFiltered.length === 0);
-
         const institution = document.querySelector('input[name="institution"]:checked');
         let choosenInstValidator = false;
 
@@ -291,7 +287,7 @@
 
     formSummary() {
       const summaryBtn = document.querySelector(".get-form-data");
-      summaryBtn.addEventListener("click", function() {
+      summaryBtn.addEventListener("click", function () {
         const quantity = document.getElementById("quantity").value;
         const institution = document.querySelector('input[name="institution"]:checked').parentElement.textContent;
         const chosenCats = document.querySelectorAll('input[name="categories"]:checked');
@@ -332,8 +328,8 @@
      */
     submit(e) {
       e.preventDefault();
-      this.updateForm();
       this.validateForm();
+      this.updateForm();
 
       const form = document.querySelector("#donation-form");
       let formData = new FormData(form);
@@ -377,11 +373,14 @@
           "pick_up_time": pickUpTime,
           "pick_up_comment": pickUpComment
         })
-        console.log(data);
         xhr.send(data);
       }
 
       sendJson(formData);
+
+      setTimeout(function() {
+        document.location.href = "/";
+      }, 5000);
     }
 
   }
