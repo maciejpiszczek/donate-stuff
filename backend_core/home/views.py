@@ -56,7 +56,3 @@ class DonationCreateView(LoginRequiredMixin, CreateView):
 
         except DatabaseError:
             return HttpResponse(status=400)
-
-
-class DonationConfirmView(TemplateView):
-    template_name = 'form-confirmation.html'
