@@ -38,23 +38,7 @@ archiveBtns.forEach(btn =>
       document.querySelector(".scroll-container").append(donButton);
       document.querySelector(".scroll-container").append(donDetails);
       donDetails.style.display = "none";
+
       const donationId = this.value;
-      // let donationIdInt = parseInt(donationId, 10)
-      //
-      // const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-
-      // $.ajax({
-      //   type: "POST",
-      //   url: window.location.href,
-      //   dataType: "json",
-      //   headers: {
-      //     "X-requested-With": "XMLHttpRequest",
-      //     "X-CSRFToken": csrfToken,
-      //   },
-      //   data: {
-      //     "donation_id": donationIdInt
-      //   }})
-
       archiveDonation(donationId);
-
       });

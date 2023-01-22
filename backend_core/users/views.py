@@ -1,16 +1,15 @@
 import json
 
-from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView, TemplateView, UpdateView
 from django.contrib.auth import authenticate, login, get_user_model
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render, get_object_or_404
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponse
 
 from home import models
-from .forms import RegistrationForm, LoginForm
+from .forms import RegistrationForm, LoginForm, ChangePasswordForm
 import datetime
 
 
@@ -41,10 +40,6 @@ class LogInView(LoginView):
         return redirect(reverse_lazy('users:registration'))
 
 
-def is_ajax(request):
-    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
-
-
 class UserProfileView(LoginRequiredMixin, TemplateView):
     model = get_user_model()
     template_name = 'user-page.html'
@@ -62,9 +57,6 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
         return context
 
     def post(self, request, *args, **kwargs):
-        # if is_ajax(self.request):
-        #     data = self.request.POST.get('donation_id')
-        #     return JsonResponse(data)
         json_data = json.loads(self.request.body)
 
         donation = get_object_or_404(models.Donation, id=int(json_data["donation_id"]))
@@ -74,3 +66,24 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
         return HttpResponse(status=200)
 
 
+class UserSettingsView(LoginRequiredMixin, UpdateView):
+    model = get_user_model()
+    fields = ('first_name', 'last_name')
+    template_name = 'user-settings.html'
+    raise_exception = False
+    context_object_name = 'profile'
+    success_url = reverse_lazy('users:user-profile')
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        form.save()
+        return super().form_valid(form)
+
+
+class ChangePasswordView(PasswordChangeView):
+    form_class = ChangePasswordForm
+    template_name = 'password-change.html'
+
+
+class ChangePasswordDoneView(PasswordChangeDoneView):
+    template_name = 'password-change-done.html'
