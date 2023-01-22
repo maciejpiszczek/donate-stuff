@@ -1,10 +1,13 @@
+import json
+
+from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView
 from django.contrib.auth import authenticate, login, get_user_model
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, render
-from django.http import JsonResponse
+from django.shortcuts import redirect, render, get_object_or_404
+from django.http import JsonResponse, HttpResponse
 
 from home import models
 from .forms import RegistrationForm, LoginForm
@@ -58,7 +61,16 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
 
         return context
 
-    def post(self):
-        if is_ajax(self.request):
-            data = self.request.POST.get('donation_id')
-            return JsonResponse(data)
+    def post(self, request, *args, **kwargs):
+        # if is_ajax(self.request):
+        #     data = self.request.POST.get('donation_id')
+        #     return JsonResponse(data)
+        json_data = json.loads(self.request.body)
+
+        donation = get_object_or_404(models.Donation, id=int(json_data["donation_id"]))
+        donation.is_taken = True
+        donation.save()
+
+        return HttpResponse(status=200)
+
+
