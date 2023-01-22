@@ -3,14 +3,13 @@ import json
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView, UpdateView
 from django.contrib.auth import authenticate, login, get_user_model
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
-from django.views.generic.edit import FormMixin
+from django.http import HttpResponse
 
 from home import models
-from .forms import RegistrationForm, LoginForm
+from .forms import RegistrationForm, LoginForm, ChangePasswordForm
 import datetime
 
 
@@ -79,3 +78,12 @@ class UserSettingsView(LoginRequiredMixin, UpdateView):
         form.instance.owner = self.request.user
         form.save()
         return super().form_valid(form)
+
+
+class ChangePasswordView(PasswordChangeView):
+    form_class = ChangePasswordForm
+    template_name = 'password-change.html'
+
+
+class ChangePasswordDoneView(PasswordChangeDoneView):
+    template_name = 'password-change-done.html'
