@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Ustawienia użytkownika
+{% endblock title %}
+
+{% block header %}
+    <header class="">
+        {% include 'partials/navbar.html' %}
+    </header>
+{% endblock header %}
+
+{% block container %}
+    <section class="login-page">
+      <h2>Ustawienia konta</h2>
+      <form action="/users/settings/{{ user.id }}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          {{ form.first_name }}
+        </div>
+         <div class="form-group">
+          {{ form.last_name }}
+        </div>
+        <div class="form-group form-group--buttons">
+          <a href="{% url 'users:user-profile' %}" class="btn btn--without-border">Anuluj</a>
+          <button class="btn" type="submit">Zatwierdź zmiany</button>
+        </div>
+      </form>
+    </section>
+{% endblock container %}
