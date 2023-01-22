@@ -14,6 +14,19 @@ for (let i = 0; i < coll.length; i++) {
 
 const archiveBtns = document.querySelectorAll(".archive");
 
+function archiveDonation(donId) {
+    let xhr = new XMLHttpRequest();
+    let url = "";
+    const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("X-CSRFToken", csrfToken);
+
+    let data = JSON.stringify({"donation_id": donId});
+    xhr.send(data);
+}
+
 archiveBtns.forEach(btn =>
     btn.onclick = function() {
       this.style.display = 'none';
@@ -26,20 +39,22 @@ archiveBtns.forEach(btn =>
       document.querySelector(".scroll-container").append(donDetails);
       donDetails.style.display = "none";
       const donationId = this.value;
-      let donationIdInt = parseInt(donationId, 10)
+      // let donationIdInt = parseInt(donationId, 10)
+      //
+      // const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
 
-      const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+      // $.ajax({
+      //   type: "POST",
+      //   url: window.location.href,
+      //   dataType: "json",
+      //   headers: {
+      //     "X-requested-With": "XMLHttpRequest",
+      //     "X-CSRFToken": csrfToken,
+      //   },
+      //   data: {
+      //     "donation_id": donationIdInt
+      //   }})
 
-      $.ajax({
-        type: "POST",
-        url: window.location.href,
-        dataType: "json",
-        headers: {
-          "X-requested-With": "XMLHttpRequest",
-          "X-CSRFToken": csrfToken,
-        },
-        data: {
-          "donation_id": donationIdInt
-        }})
+      archiveDonation(donationId);
 
       });

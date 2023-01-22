@@ -335,14 +335,14 @@
       let formData = new FormData(form);
       const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
 
-      function sendJson(inData) {
+      function sendJson() {
         const quantity = document.getElementById("quantity").value;
         const institution = document.querySelector('input[name="institution"]:checked').nextElementSibling.nextElementSibling.firstElementChild.firstElementChild.firstElementChild.value;
         const chosenCats = document.querySelectorAll('input[name="categories"]:checked');
         let chosenCatsIds = [];
 
         chosenCats.forEach(cat => {
-          const catId = cat.nextElementSibling.nextElementSibling.firstElementChild.firstElementChild.value;
+          const catId = cat.nextElementSibling.nextElementSibling.firstElementChild.value;
           chosenCatsIds.push(catId);
         })
 
@@ -376,7 +376,7 @@
         xhr.send(data);
       }
 
-      sendJson(formData);
+      sendJson();
 
       setTimeout(function() {
         document.location.href = "/";
