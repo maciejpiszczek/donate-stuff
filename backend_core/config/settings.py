@@ -149,3 +149,23 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 LOGIN_REDIRECT_URL = 'home:index'
 LOGOUT_REDIRECT_URL = 'home:index'
+
+# Redis config
+
+REDIS_HOST = os.environ.get('REDIS_HOST', 'redis')
+REDIS_PORT = os.environ.get('REDIS_PORT', '6379')
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
+CACHE_TTL = 60 * 15
