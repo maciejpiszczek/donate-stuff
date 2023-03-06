@@ -10,6 +10,7 @@ django-environ==0.9.0
 django-phonenumber-field==7.0.2
 django-phonenumbers==1.0.1
 django-redis==5.2.0
+django_debug_toolbar==3.8.1
 filelock==3.9.0
 iniconfig==1.1.1
 packaging==21.3

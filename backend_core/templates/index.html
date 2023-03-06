@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% load cache %}
+
 {% block title %}
   Welcome
 {% endblock title %}
@@ -19,6 +21,7 @@
       </div>
     </header>
   {% endblock header %}
+
 
   {% block container %}
     <section id="stats" class="stats">
