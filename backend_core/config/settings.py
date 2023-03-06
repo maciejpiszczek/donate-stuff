@@ -175,6 +175,11 @@ CACHE_TTL = 60 * 15
 
 INTERNAL_IPS = os.environ.get('DJ_INTERNAL_IPS', '').split()
 
+
+def show_toolbar(request):
+    return True
+
+
 DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': True,
+    'SHOW_TOOLBAR_CALLBACK': 'config.settings.show_toolbar',
 }
